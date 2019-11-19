@@ -10,23 +10,24 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-@PropertySource(value="classpath:info.properties")
+@PropertySource(value = "classpath:info.properties")
 public class QuizExpirationScheduled {
-	
+
 	@Autowired
 	private Environment env;
 
-	private RestTemplate restTemplate = new RestTemplate();
+	private RestTemplate restTemplate;
 	private String url;
-	
+
 	@PostConstruct
-	private void s() {
+	private void urlSet() {
+		restTemplate = new RestTemplate();
 		url = env.getProperty("url.mainAppExpiredRequestURL");
 	}
-	
-	@Scheduled(fixedRate = (1000*60*60*24))
+
+	@Scheduled(fixedRate = (1000 * 60 * 60 * 24))
 	private void task() {
 		restTemplate.delete(url);
 	}
-	
+
 }
